@@ -7,8 +7,9 @@ import urllib.request
 import re
 
 
-zips = ['http://www.city-data.com/zips/92020.html','http://www.city-data.com/zips/90210.html','http://www.city-data.com/zips/91316.html','http://www.city-data.com/zips/75024.html']
-#zips = ['http://www.city-data.com/zips/90210.html']
+#zips = ['http://www.city-data.com/zips/92020.html','http://www.city-data.com/zips/90210.html','http://www.city-data.com/zips/91316.html','http://www.city-data.com/zips/75024.html']
+zips = ['http://www.city-data.com/zips/92021.html']
+zipsx = ["http://www.unitedstateszipcodes.org/92021/"]
 
 
 ####################### Setting the Stage (methods) #######################
@@ -21,7 +22,7 @@ def graburlcontent(pageurl, *args):
     try: 
         page = opener.open(pageurl) 
         x = page.read(*args) # number of bytes is optional
-        print(x)
+        #print(x)
         return x.decode('UTF-8')
         
 
@@ -30,7 +31,25 @@ def graburlcontent(pageurl, *args):
         pass
 
 
+
 #+====================> DEMOGRAPHIC <==================+
+
+
+def get_population_by_age_group(text):
+    xxx = text.split('<h3>Total Population by Age</h3>')
+    
+    males_by_age = [elem.replace('</td>','') for elem in xxx[1].split('</td></tr><tr><td>')[1].split('<td align=right>')[1:]]
+    females_by_age = [elem.replace('</td>','').replace('</tr><tr><td>Total','') for elem in xxx[1].split('</td></tr><tr><td>Female')[1].split('<td align=right>')[1:19]]
+    #print(males_by_age)
+    #print(females_by_age)
+    
+    people = {"Males Under 5" : males_by_age[0]}
+
+    print(people["Males Under 5"])
+    
+    return people
+
+
 
 def get_population(text): 
     population = re.findall("Estimated zip code population in 2013:</b>\s([\d,]+)<br>", text)
@@ -153,11 +172,22 @@ def get_renters(text):
 
 
 ####################### Execution part #######################
+for i in zipsx:
+    try:
+        page_contents = graburlcontent(i)
+        population_by_age = get_population_by_age_group(page_contents)
+        print(i)
+        print("Population by age group: %s" % (population_by_age))
+
+    except:
+        print("can't print for some reason, check the control flow in zips2")
+        continue
 
 for i in zips:
     try:
         page_contents = graburlcontent(i)
         population = get_population(page_contents)
+        
         population_density = get_population_density(page_contents)
         males = get_males(page_contents)
         females = get_females(page_contents)
@@ -187,6 +217,7 @@ for i in zips:
         print(i)
         
         print('\nDEMOGRAPHIC:\n')
+        print("Population by age group: %s" % (population_by_age))
         print("Total population: %s" % (population[0]))
         print("Population density is: %s per square mile." % (population_density[0]))
         print("Males: %s" % (males[0]), '(' + format(float(males[0].replace(',',''))/float(population[0].replace(',',''))*100, '.1f') + '%)')
