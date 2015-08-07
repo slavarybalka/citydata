@@ -8,7 +8,7 @@ import re
 
 
 zips = ['http://www.city-data.com/zips/92020.html','http://www.city-data.com/zips/90210.html','http://www.city-data.com/zips/91316.html','http://www.city-data.com/zips/75024.html']
-#zips = ['http://www.city-data.com/zips/91316.html']
+#zips = ['http://www.city-data.com/zips/90210.html']
 
 
 ####################### Setting the Stage (methods) #######################
@@ -21,7 +21,7 @@ def graburlcontent(pageurl, *args):
     try: 
         page = opener.open(pageurl) 
         x = page.read(*args) # number of bytes is optional
-        #print(x)
+        print(x)
         return x.decode('UTF-8')
         
 
@@ -104,6 +104,11 @@ def get_professional_degree(text):
     
     return professional
 
+def get_private_schools(text): 
+    private_schools = re.findall("elementary and middle school\)\:<\/b>\s[\d,]+<br>\\r\\n<div\sclass\=\\'hgraph\\'><table><tr><td><b>Here:<\/b><\/td><td><p class=\\\'h\\\'\sstyle=\\'padding-left:[\d,]+px;\\'><\/p>([\d\.%]+)", text)
+    
+    return private_schools
+
 
 #+====================> EMPLOYMENT <==================+
 
@@ -136,6 +141,13 @@ def get_house_value(text):
        
     return house_value
 
+def get_renters(text): 
+    renters = re.findall("% of renters here:<\/b><\/td><td><p class=\\'h\\' style=\\'padding-left:\d+px;\\'><\/p>([\d.%]+)", text)
+       
+    return renters
+
+    
+
 
 
 
@@ -162,8 +174,10 @@ for i in zips:
         house_value = get_house_value(page_contents)
         high_school = get_high_school(page_contents)
         bachelors = get_bachelors(page_contents)
-        professional= get_professional_degree(page_contents)
+        professional = get_professional_degree(page_contents)
+        private_schools = get_private_schools(page_contents)
         travel_time_to_work = get_travel_time_to_work(page_contents)
+        renters = get_renters(page_contents)
 
 
 
@@ -171,14 +185,12 @@ for i in zips:
         
         print('\n')
         print(i)
+        
+        print('\nDEMOGRAPHIC:\n')
         print("Total population: %s" % (population[0]))
         print("Population density is: %s per square mile." % (population_density[0]))
         print("Males: %s" % (males[0]), '(' + format(float(males[0].replace(',',''))/float(population[0].replace(',',''))*100, '.1f') + '%)')
         print("Females: %s" % (females[0]), '(' + format(float(females[0].replace(',',''))/float(population[0].replace(',',''))*100, '.1f') + '%)')
-        print("Completed high school: %s" % (high_school[0]))
-        print("Have Bachelors degree: %s" % (bachelors[0]))
-        print("Have Professional degree: %s" % (professional[0]))
-        print("Travel time to work: %s" % (travel_time_to_work[0]) + ' minutes')
         print("Median age: %s" % (median_age[0]))
         print("Never married: %s" % (never_married[0]))
         print("Married: %s" % (married[0]))
@@ -186,10 +198,23 @@ for i in zips:
         print("Widowed: %s" % (widowed[0]))
         print("Divorced: %s" % (divorced[0]))
         print("Foreign born: %s" % (foreign_born[0]))
+
+        print('\nEDUCATION:\n')
+        print("Completed high school: %s" % (high_school[0]))
+        print("Have Bachelors degree: %s" % (bachelors[0]))
+        print("Have Professional degree: %s" % (professional[0]))
+        print("Students in private schools in grades 1 to 8: %s" % (private_schools[0]))
+
+        print('\nWORK:\n')
+        print("Travel time to work: %s" % (travel_time_to_work[0]) + ' minutes')
         print("Unemployed: %s" % (employment[0]))
+
+        print('\nHOUSING:\n')
         print("Median income: %s" % (median_income[0]))
         print("Median rent:  %s" % '$' + str(int(int(median_rent[0].replace(',','').replace('$',''))*1.10)))
         print("House value:  %s" % '$' + str(int(int(house_value[0].replace(',','').replace('$',''))*1.30)))
+        print("Renters: %s" % (renters[0]))
+
    
         print('\n')
 
