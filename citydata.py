@@ -8,8 +8,8 @@ import re
 
 
 #zips = ['http://www.city-data.com/zips/92020.html','http://www.city-data.com/zips/90210.html','http://www.city-data.com/zips/91316.html','http://www.city-data.com/zips/75024.html']
-zips = ['http://www.city-data.com/zips/92021.html']
-zipsx = ["http://www.unitedstateszipcodes.org/92021/"]
+zips = ['http://www.city-data.com/zips/75024.html']
+zipsx = ["http://www.unitedstateszipcodes.org/75024/"]
 
 
 ####################### Setting the Stage (methods) #######################
@@ -43,9 +43,62 @@ def get_population_by_age_group(text):
     #print(males_by_age)
     #print(females_by_age)
     
-    people = {"Males Under 5" : males_by_age[0]}
+    people = {"Males under 5" : males_by_age[0].replace(',',''),
+              "Males 5-9" : males_by_age[1].replace(',',''),
+              "Males 10-14" : males_by_age[2].replace(',',''),
+              "Males 15-19" : males_by_age[3].replace(',',''),
+              "Males 20-24" : males_by_age[4].replace(',',''),
+              "Males 25-29" : males_by_age[5].replace(',',''),
+              "Males 30-34" : males_by_age[6].replace(',',''),
+              "Males 35-39" : males_by_age[7].replace(',',''),
+              "Males 40-44" : males_by_age[8].replace(',',''),
+              "Males 45-49" : males_by_age[9].replace(',',''),
+              "Males 50-54" : males_by_age[10].replace(',',''),
+              "Males 55-59" : males_by_age[11].replace(',',''),
+              "Males 60-64" : males_by_age[12].replace(',',''),
+              "Males 65-69" : males_by_age[13].replace(',',''),
+              "Males 70-74" : males_by_age[14].replace(',',''),
+              "Males 75-79" : males_by_age[15].replace(',',''),
+              "Males 80-84" : males_by_age[16].replace(',',''),
+              "Males 85 plus" : males_by_age[17].replace(',',''),
+              "Females under 5" : females_by_age[0].replace(',',''),
+              "Females 5-9" : females_by_age[1].replace(',',''),
+              "Females 10-14" : females_by_age[2].replace(',',''),
+              "Females 15-19" : females_by_age[3].replace(',',''),
+              "Females 20-24" : females_by_age[4].replace(',',''),
+              "Females 25-29" : females_by_age[5].replace(',',''),
+              "Females 30-34" : females_by_age[6].replace(',',''),
+              "Females 35-39" : females_by_age[7].replace(',',''),
+              "Females 40-44" : females_by_age[8].replace(',',''),
+              "Females 45-49" : females_by_age[9].replace(',',''),
+              "Females 50-54" : females_by_age[10].replace(',',''),
+              "Females 55-59" : females_by_age[11].replace(',',''),
+              "Females 60-64" : females_by_age[12].replace(',',''),
+              "Females 65-69" : females_by_age[13].replace(',',''),
+              "Females 70-74" : females_by_age[14].replace(',',''),
+              "Females 75-79" : females_by_age[15].replace(',',''),
+              "Females 80-84" : females_by_age[16].replace(',',''),
+              "Females 85 plus" : females_by_age[17].replace(',',''),
+              "Total under 5" : str(int(males_by_age[0].replace(',','')) + int(females_by_age[0].replace(',',''))),
+              "Total 5-9" : str(int(males_by_age[1].replace(',','')) + int(females_by_age[1].replace(',',''))),
+              "Total 10-14" : str(int(males_by_age[2].replace(',','')) + int(females_by_age[2].replace(',',''))),
+              "Total 15-19" : str(int(males_by_age[3].replace(',','')) + int(females_by_age[3].replace(',',''))),
+              "Total 20-24" : str(int(males_by_age[4].replace(',','')) + int(females_by_age[4].replace(',',''))),
+              "Total 25-29" : str(int(males_by_age[5].replace(',','')) + int(females_by_age[5].replace(',',''))),
+              "Total 30-34" : str(int(males_by_age[6].replace(',','')) + int(females_by_age[6].replace(',',''))),
+              "Total 35-39" : str(int(males_by_age[7].replace(',','')) + int(females_by_age[7].replace(',',''))),
+              "Total 40-44" : str(int(males_by_age[8].replace(',','')) + int(females_by_age[8].replace(',',''))),
+              "Total 45-49" : str(int(males_by_age[9].replace(',','')) + int(females_by_age[9].replace(',',''))),
+              "Total 50-54" : str(int(males_by_age[10].replace(',','')) + int(females_by_age[10].replace(',',''))),
+              "Total 55-59" : str(int(males_by_age[11].replace(',','')) + int(females_by_age[11].replace(',',''))),
+              "Total 60-64" : str(int(males_by_age[12].replace(',','')) + int(females_by_age[12].replace(',',''))),
+              "Total 65-69" : str(int(males_by_age[13].replace(',','')) + int(females_by_age[13].replace(',',''))),
+              "Total 70-74" : str(int(males_by_age[14].replace(',','')) + int(females_by_age[14].replace(',',''))),
+              "Total 75-79" : str(int(males_by_age[15].replace(',','')) + int(females_by_age[15].replace(',',''))),
+              "Total 80-84" : str(int(males_by_age[16].replace(',','')) + int(females_by_age[16].replace(',',''))),
+              "Total 85 plus" : str(int(males_by_age[17].replace(',','')) + int(females_by_age[17].replace(',','')))}
 
-    print(people["Males Under 5"])
+    print(people["Total 65-69"], people["Total 5-9"], people["Total under 5"], people['Total 55-59'])
     
     return people
 
@@ -178,9 +231,9 @@ for i in zipsx:
         population_by_age = get_population_by_age_group(page_contents)
         print(i)
         print("Population by age group: %s" % (population_by_age))
-
+        
     except:
-        print("can't print for some reason, check the control flow in zips2")
+        print("can't print for some reason, check the control flow in zipsx")
         continue
 
 for i in zips:
